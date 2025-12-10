@@ -2,6 +2,7 @@ import { useState } from 'react'
 import './App.css'
 import { Button } from './components/ui/button'
 import { Input } from './components/ui/input'
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 type StepSnapshot = { l: number; r: number; longest: string; comparison: string };
 function App() {
@@ -10,7 +11,8 @@ function App() {
   const [comparison, setComparison] = useState('');
   const [window, setWindow] = useState({
     l: 0,
-    r: 0
+    r: 0,
+    value: ''
   });
   const [previous, setPrevious] = useState<StepSnapshot[]>([{ ...window, longest, comparison }]);
   // let comparison = '';
@@ -45,7 +47,7 @@ function App() {
 
     // push snapshot of current state before moving forward
     setPrevious((prev) => [...prev, { ...window, longest, comparison }]);
-    setWindow({ l, r });
+    setWindow({ ...window, l, r, });
     setComparison(nextComparison);
     setLongest(nextLongest);
   }
@@ -55,23 +57,34 @@ function App() {
       const previousStep = copyPrev.pop();
       setPrevious(copyPrev);
       if (previousStep) {
-        setWindow({ l: previousStep.l, r: previousStep.r });
+        setWindow({ ...window, l: previousStep.l, r: previousStep.r });
         setComparison(previousStep.comparison);
         setLongest(previousStep.longest);
       }
     }
 
+    const handleReset = () => {
+      setWindow({ l: 0, r:0, value: ''});
+      setComparison('');
+      setLongest('');
+      setPrevious([{ l: 0, r:0, longest: '', comparison: '' }]);
+      setValue('');
+    }
+
+    console.log('window', window);
+
   return (
-    <>
-    <div className='flex items-end gap-4'>
-    <div className='text-left'>
-      <label htmlFor="random">Random String</label>
-    <Input id='random' maxLength={100} placeholder='Enter random string' onChange={(e) => setValue(e.target.value)}/>
-    </div>
-    <Button onClick={() => setWindow({ l: 0, r:0})}>RESET</Button>
-    </div>
-    <div className="flex gap-4 items-center mt-8 max-w-80 overflow-auto pb-4">
-      {value.split('').map((item, idx) => (
+    <div className='w-[100%]'>
+      <div className='flex items-end gap-4'>
+        <div className='text-left'>
+          <label className="font-semibold" htmlFor="random">Random String</label>
+        <Input className="bg-white" id='random' maxLength={50} placeholder='Enter random string' onChange={(e) => setValue(e.target.value)} value={value}/>
+        </div>
+        <Button onClick={() => setWindow({ ...window, value: value })}>SUBMIT</Button>
+      </div>
+    {window.value && 
+    <div className="flex gap-4 items-center mt-8 overflow-auto pb-4 p-4 mb-8 border rounded border-white">
+      {window?.value.split('').map((item, idx) => (
         <div className='flex-col' key={`${item}-${idx}`}>
           <div>
             <p className={idx === window.l ? '' : 'invisible'}>left</p>
@@ -84,15 +97,17 @@ function App() {
           </div>
         </div>
       ))}
-    </div>
-    <div className='flex justify-between mt-2'>
-      <Button disabled={previous.length < 1 ? true:false} onClick={handlePrevious}>Previous</Button>
-    <Button disabled={window.r+1 === value.length ? true : false} onClick={handleNext}>Next</Button>
-    </div>
-    <p className="font-3xl">
+    </div>}
+    {window?.value && <div className='flex justify-between mt-2'>
+      <Button className='flex items-center leading-[unset]'  variant="ghost" disabled={previous.length < 1 ? true:false} onClick={handlePrevious}><ArrowLeft/> Previous</Button>
+    <Button className='flex items-center leading-[unset]' variant="ghost" disabled={(window.r+1 === window?.value.length || !window.value) ? true : false} onClick={handleNext}>Next <ArrowRight/></Button>
+    </div>}
+    {window?.value && <p className="font-3xl">
       {longest}
-    </p>
-    </>
+    </p>}
+    <br />
+    {window?.value && <Button className='w-[100%]' onClick={handleReset} variant="outline">RESET</Button>}
+    </div>
   )
 }
 
