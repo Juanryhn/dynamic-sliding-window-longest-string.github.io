@@ -103,6 +103,7 @@ function App() {
     <Button className='flex items-center leading-[unset]' variant="ghost" disabled={(window.r+1 === window?.value.length || !window.value) ? true : false} onClick={handleNext}>Next <ArrowRight/></Button>
     </div>}
     {window?.value && <p className="font-3xl">
+      Longest String: 
       {longest}
     </p>}
     <br />
