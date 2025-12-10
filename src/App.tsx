@@ -71,8 +71,6 @@ function App() {
       setValue('');
     }
 
-    console.log('window', window);
-
   return (
     <div className='w-[100%]'>
       <div className='flex items-end gap-4'>
