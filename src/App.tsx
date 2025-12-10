@@ -101,11 +101,11 @@ function App() {
       <div className='flex items-end gap-4'>
         <div className='text-left'>
           <label className="font-semibold" htmlFor="random">Random String</label>
-          <Input className="bg-white" id='random' maxLength={50} placeholder='Enter random string' onChange={(e) => setValue(e.target.value)} value={value} />
+          <Input className="bg-white text-black" id='random' maxLength={50} placeholder='Enter random string' onChange={(e) => setValue(e.target.value)} value={value} />
         </div>
         <Button onClick={() => setWindow({ ...window, value: value })}>SUBMIT</Button>
       </div>
-
+      <div className='max-w-max'>
       {window.value &&
         <div className="flex gap-4 items-center mt-8 overflow-auto pb-4 p-4 mb-8 border rounded border-white">
           {window?.value.split('').map((item, idx) => (
@@ -139,7 +139,8 @@ function App() {
         <strong className="border-b border-primary text-primary"> {longest}</strong>
       </p>}
       <br />
-      {window?.value && <Button className='w-[100%]' onClick={handleReset} variant="outline">RESET</Button>}
+      {window?.value && <Button className='w-[100%] max-w-3xl' onClick={handleReset} variant="outline">RESET</Button>}
+      </div>
     </div>
   )
 }
